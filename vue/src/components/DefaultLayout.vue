@@ -14,6 +14,7 @@
               </div>
             </div>
           </div>
+          <h1 class="text-white">DefaultLayout</h1>
           <div class="hidden md:block">
             <div class="ml-4 flex items-center md:ml-6">
 
@@ -102,12 +103,7 @@ Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuI
 
     }
     return{
-        user :{
-                name: 'Tom Cook',
-                email: 'tom@example.com',
-                imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-
-            },
+        user : computed(()=>{return store.state.user.date}),
         navigation,
         logout,
 
