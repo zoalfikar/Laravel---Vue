@@ -15,7 +15,7 @@ const tmpSurveys = [{
                 type: "select",
                 question: "from which country are you ?",
                 description: null,
-                date: {
+                data: {
                     options: [
                         { uuid: "wdzdsdasdasdasd", text: "combodia" },
                         { uuid: "wdzdsdasdasdasd", text: "syria" },
@@ -29,7 +29,7 @@ const tmpSurveys = [{
                 id: 2,
                 type: "text",
                 question: "from which country are you ?",
-                description: null,
+                description: "just test",
                 date: {},
             },
         ],
@@ -45,7 +45,8 @@ const store = createStore({
             },
             token: sessionStorage.getItem('TOKEN'),
         },
-        surveys: [...tmpSurveys]
+        surveys: [...tmpSurveys],
+        questionTypes: ["text", "select", "radio", "checkbox", "textarea"],
     },
     getter: {},
     actions: {

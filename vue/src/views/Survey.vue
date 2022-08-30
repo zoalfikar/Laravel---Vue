@@ -12,7 +12,7 @@
         </div>
     </template>
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
-        <div v-for="survey in Surveys" :key="survey.id" class="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray h-[470px]">
+            <div v-for="survey in Surveys" :key="survey.id" class="flex flex-col py-4 px-6 shadow-md bg-white hover:bg-gray h-[470px]">
             <img :src="survey.image" class="w-full h-48 object-cover"/>
             <h4 class="mt-4 text-lg font-bold">{{survey.title}}</h4>
             <div v-html="survey.description" class="overflow-hidden flex-1"></div>
