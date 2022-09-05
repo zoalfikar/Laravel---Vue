@@ -1,42 +1,7 @@
+import axios from "axios";
 import { createStore } from "vuex";
 import axiosClient from "../axios";
-const tmpSurveys = [{
-        id: 100,
-        title: "sdsdsds",
-        slug: "sdsldksldkl",
-        status: "sdsdsd",
-        image: "http://blog.logrocket.com/wp-content/uploads/2020/12/vue-skyline.png",
-        description: "nothings make any sanse",
-        created_at: "2322-32-32 21:12:1",
-        updated_at: "2322-32-32 21:12:1",
-        expire_date: "2322-32-32 21:12:1",
-        questions: [{
-                id: 1,
-                type: "select",
-                question: "from which country are you ?",
-                description: null,
-                data: {
-                    options: [
-                        { uuid: "wdzdsdasdasdasd", text: "combodia" },
-                        { uuid: "wdzdsdasdasdasd", text: "syria" },
-                        { uuid: "wdzdsdasdasdasd", text: "iaraq" },
-                        { uuid: "wdzdsdasdasdasd", text: "guanatanmo" },
 
-                    ]
-                },
-            },
-            {
-                id: 2,
-                type: "text",
-                question: "from which country are you ?",
-                description: "just test",
-                date: {},
-            },
-        ],
-    },
-
-
-];
 const store = createStore({
     state: {
         user: {
@@ -45,23 +10,55 @@ const store = createStore({
             },
             token: sessionStorage.getItem('TOKEN'),
         },
-        surveys: [...tmpSurveys],
+        currentSurvey: {
+            loading: false,
+            data: {}
+        },
+        surveys: {
+            loading: false,
+            data: []
+        },
         questionTypes: ["text", "select", "radio", "checkbox", "textarea"],
     },
     getter: {},
     actions: {
+        getSurveys({ commit }) {
+            commit('setSurveysLoading', true)
+            return axiosClient.get("/survey").then((res) => {
+                commit('setSurveysLoading', false)
+                commit("setSurveys", res.data)
+                return res;
+            })
+
+        },
+        deleteSurvey({}, id) {
+            return axiosClient.delete(`/survey/${id}`);
+        },
+        getSurvey({ commit }, id) {
+
+            commit("setCurrentSurveyLoading", true);
+            return axiosClient.get(`/survey/${id}`).then((res) => {
+                commit("setCurrentSurvey", res.data);
+                commit("setCurrentSurveyLoading", false);
+                return res;
+
+            }).catch((err) => {
+                commit("setCurrentSurveyLoading", false);
+                throw err;
+            });
+        },
         saveSurvey({ commit }, survey) {
             delete survey.image_url;
             let response;
             if (survey.id) {
                 response = axiosClient.put(`/survey/${survey.id}`, survey).then((res) => {
-                    commite("updateSurvey", res.data);
+                    commit("setCurrentSurvey", res.data);
                     return res;
                 });
 
             } else {
                 response = axiosClient.post(`/survey`, survey).then((res) => {
-                    commite("saveSurvey", res.data);
+                    commit("setCurrentSurvey", res.data);
                     return res;
                 });
                 return response;
@@ -90,23 +87,21 @@ const store = createStore({
 
     },
     mutations: {
-        saveSurve: (state, survey) => {
-            state.surveys = [...state.surveys, survey.data];
+        setCurrentSurveyLoading: (state, loading) => {
+            state.currentSurvey.loading = loading;
         },
-        updateSurvey: (state, survey) => {
-            state.surveys = state.surveys.map((s) => {
-                if (s.id == survey.data.id) {
-                    return survey.data;
-                }
-                return s;
-
-            });
-
-
+        setSurveysLoading: (state, loading) => {
+            state.surveys.loading = loading;
+        },
+        setCurrentSurvey: (state, survey) => {
+            state.currentSurvey.data = survey.data
+        },
+        setSurveys: (state, surveys) => {
+            state.surveys.data = surveys.data
         },
         logout: (state) => {
             state.user.date = {};
-            state.user.token = {};
+            state.user.token = null;
             sessionStorage.removeItem('TOKEN');
         },
         setUser: (state, userData) => {
