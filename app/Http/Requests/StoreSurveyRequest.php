@@ -38,7 +38,8 @@ class StoreSurveyRequest extends FormRequest
             'title' => 'required|string|max:1000',
             'status' => 'required|boolean',
             'description' => 'nullable|string',
-            'expire_date' => 'nullable|date|after:tomorrow'
+            'expire_date' => 'nullable|date|after:tomorrow',
+            'questions'=>'array'
         ];
     }
 }

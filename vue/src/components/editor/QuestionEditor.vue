@@ -20,13 +20,12 @@
     </div>
         <div class="grid gab-3 grid-cols-12">
             <div class="mt-3 col-span-9">
-            <label :for="'question_text_'+model.data" class="block text-sm font-medium text-gray-700">Question Text</label>
-            <input type="text" :name="'question_text_'+model.data" v-model="model.question" @change="dataChange" :id="'question_text_'+model.data" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-
+            <label :for="'question_text_'+model.id" class="block text-sm font-medium text-gray-700">Question Text</label>
+            <input type="text" :name="'question_text_'+model.id" v-model="model.question" @change="dataChange" :id="'question_text_'+model.id" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
             </div>
             <div class="mt-3 px-3 col-span-3">
-            <label for="question_type" class="block text-sm font-medium text-gray-700">Select Question Type</label>
-            <select name="question_type" id="question_type" v-model="model.type" @change="typeChange" class="mt-1 block w-full py-2 px-4 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ">
+            <label :for="'question_type'+model.id" class="block text-sm font-medium text-gray-700">Select Question Type</label>
+            <select :name="'question_type'+model.id" :id="'question_type'+model.id" v-model="model.type" @change="typeChange" class="mt-1 block w-full py-2 px-4 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ">
             <option v-for = "Type in questionsTypes" :key="Type" :value="Type" >
             {{upperCaseFirst(Type)}}
             </option>
@@ -49,8 +48,6 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                         </svg>
                         Add Option
-
-
                     </button>
                 </h4>
                 <div v-if="!model.data.options.length" class="text-gray-600 text-center py-3">
@@ -58,7 +55,7 @@
                 </div>
                 <div v-for="(option , index) in model.data.options" :key="option.uudi" class="flex items-center mb-1" >
                     <span class="w-6 text-sm">{{index + 1}}.</span>
-                    <input type="text" v-model="option.text" @change="dataChange" name="" id="" class="rounded-sm w-full py-1 px-2 text-sm border border-gray-300 focus:border-indigo-300">
+                    <input type="text" v-model="option.text" @change="dataChange" class="rounded-sm w-full py-1 px-2 text-sm border border-gray-300 focus:border-indigo-300">
                     <button type="button" @click="removeOption(option)" class="flex items-center justify-center h-6 w-6  rounded-full border border-transparent transition-colors hover:border-red-100">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
@@ -117,11 +114,12 @@ function typeChange() {
     dataChange();
 
 }
-function dataChange(params) {
-    const data = JSON.stringify(model.value);
+function dataChange() {
+    const data = JSON.parse(JSON.stringify(model.value));
     if (!shouldHaveOptions()) {
         delete data.data.options;
     }
+
     emit("change",data);
 }
 function addQuestion() {
